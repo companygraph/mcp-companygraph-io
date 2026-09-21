@@ -39,5 +39,12 @@ test("the registry entry names the name and address deployment.json holds", () =
   assert.deepEqual({ name: d.registry_name, url: `https://${d.domain}/mcp` }, entry);
 });
 
+// mcp-publisher logs in by DNS on registry_domain, and the Registry accepts that login only for
+// the namespace the domain spells in reverse, so the two have to agree label for label.
+test("the registry domain, reversed, is the namespace of the registry name", () => {
+  const d = JSON.parse(fs.readFileSync(path.join(process.cwd(), "deployment.json"), "utf8"));
+  assert.equal(d.registry_domain.split(".").reverse().join("."), d.registry_name.split("/")[0]);
+});
+
 // No test of the JSON-LD field by field: the model names no surface for this deployment yet, so
 // the build writes none and the shared page test holds the page to serving none; it arrives with the surface.

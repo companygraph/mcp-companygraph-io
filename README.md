@@ -31,7 +31,9 @@ Publishing to the MCP Registry runs in the `registry` environment, which require
 
 ## The owner's steps
 
-Until these are done, the pull request's `deploy / terraform` fails at authentication, because the project, the identity pool and the service accounts it signs in with do not exist yet. They are the owner's, in this order.
+Until these are done, the pull request's `deploy / terraform` fails at authentication, because the project, the identity pool and the service accounts it signs in with do not exist yet. They are the owner's, in this order. The key commands need OpenSSL 3 and `/usr/bin/openssl` on macOS is LibreSSL, so every step runs in a shell that has first run:
+
+    export PATH=/opt/homebrew/bin:$PATH
 
 1. Create the project and link it to the billing account, then write the project number into `deployment.json` as `project_number`, in a commit on the pull request:
 
@@ -43,30 +45,33 @@ Until these are done, the pull request's `deploy / terraform` fails at authentic
 
         gcloud services enable cloudbilling.googleapis.com --project companygraph-io-mcp
 
-3. Apply the bootstrap, then keep a second copy of `infra/bootstrap/terraform.tfstate` somewhere safe, because that local file is its only state:
+3. Apply the bootstrap before the merge, because the merge's deploy signs in with what it creates. Until then `infra/bootstrap/` exists only on the pull request's branch, so it is applied from the worktree that has the branch checked out. Its state is a local file git ignores, and `git worktree remove` deletes ignored files without a word, so copy the state out of the worktree the moment the apply finishes; no worktree holding it may be removed before that copy exists. Keep a second copy of the copied file somewhere safe as well, because it is the bootstrap's only state:
 
-        brew install terraform
+        brew tap hashicorp/tap && brew install hashicorp/tap/terraform
         gcloud auth application-default login
         terraform -chdir=infra/bootstrap init && terraform -chdir=infra/bootstrap apply
+        cp infra/bootstrap/terraform.tfstate ~/companygraph-io-mcp-bootstrap.tfstate
 
 4. Merge the pull request. The first deploy fails at the live check, and its `run_host` warning names the host; write it into `deployment.json` as `run_host` and merge that.
 
-5. At Hostpoint, add the records the deployment names for `mcp.companygraph.io`, replacing the default record, and the Registry's TXT record at the apex of `companygraph.io` from step 6:
+5. Make the Registry's signing key outside the repository, so it can never be committed, and store the private key as `MCP_PRIVATE_KEY` in the repository's `registry` environment, which the fourth and fifth commands create with the owner as its required reviewer and tags `v*` as the only refs that may deploy to it. The third command prints the TXT record step 6 publishes; keep that line. Move `"$K/key.pem"` into a password manager before the last command if the key is to be kept, because the last command deletes it:
+
+        K=$(mktemp -d)
+        openssl genpkey -algorithm Ed25519 -out "$K/key.pem"
+        echo "companygraph.io. IN TXT \"v=MCPv1; k=ed25519; p=$(openssl pkey -in "$K/key.pem" -pubout -outform DER | tail -c 32 | base64)\""
+        echo '{"reviewers":[{"type":"User","id":7037057}],"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}' | gh api -X PUT repos/companygraph/mcp-companygraph-io/environments/registry --input -
+        gh api -X POST repos/companygraph/mcp-companygraph-io/environments/registry/deployment-branch-policies -f name='v*' -f type=tag
+        openssl pkey -in "$K/key.pem" -noout -text | grep -A3 'priv:' | tail -n +2 | tr -d ' :\n' | gh secret set MCP_PRIVATE_KEY --env registry --repo companygraph/mcp-companygraph-io
+        rm -rf "$K"
+
+6. At Hostpoint, add the records the deployment names for `mcp.companygraph.io`, replacing the default record, and the TXT record step 5 printed, at the apex of `companygraph.io`:
 
         terraform -chdir=infra init
         terraform -chdir=infra output dns_records
 
-6. Make the Registry's signing key, publish its public half in the TXT record, and store the private key as `MCP_PRIVATE_KEY` in the repository's `registry` environment, which the first command creates with the owner as its required reviewer and tags `v*` as the only refs that may deploy to it:
+7. Once the server is live and the model names its surface, tag `v1.0.0` on `main` as GitHub has it and approve the `registry` run:
 
-        openssl genpkey -algorithm Ed25519 -out key.pem
-        echo "companygraph.io. IN TXT \"v=MCPv1; k=ed25519; p=$(openssl pkey -in key.pem -pubout -outform DER | tail -c 32 | base64)\""
-        echo '{"reviewers":[{"type":"User","id":7037057}],"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}' | gh api -X PUT repos/companygraph/mcp-companygraph-io/environments/registry --input -
-        gh api -X POST repos/companygraph/mcp-companygraph-io/environments/registry/deployment-branch-policies -f name='v*' -f type=tag
-        openssl pkey -in key.pem -noout -text | grep -A3 'priv:' | tail -n +2 | tr -d ' :\n' | gh secret set MCP_PRIVATE_KEY --env registry --repo companygraph/mcp-companygraph-io
-
-7. Once the server is live and the model names its surface, tag `v1.0.0` and approve the `registry` run:
-
-        git tag v1.0.0 && git push origin v1.0.0
+        git fetch origin && git tag v1.0.0 origin/main && git push origin v1.0.0
 
 ## License
 
