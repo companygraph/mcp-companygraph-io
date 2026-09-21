@@ -74,7 +74,8 @@ test("a crawler is told the organization and the endpoint the model names", () =
   const api = graph.find((n) => n["@type"] === "WebAPI");
   assert.equal(api.url, `${origin}/mcp`, "the API is the endpoint the model names");
   assert.equal(api.description, surface.tagline, "its description is the surface's own tagline");
-  assert.equal(api.provider["@id"], organization["@id"], "and it resolves to the organization in this document");
+  assert.equal(api.provider["@id"], organization["@id"], "its provider is the organization in this document");
+  assert.equal(api.about["@id"], organization["@id"], "and it is about that organization");
 
   // A crawler reads a graph per document, so a bare `{"@id": …}` has to resolve inside this one,
   // and every id has to describe one thing rather than two.
