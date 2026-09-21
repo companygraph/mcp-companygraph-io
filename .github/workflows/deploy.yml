@@ -1,0 +1,18 @@
+# The build, the plan and the apply are the server's own, called by the release package.json
+# pins; this deployment's values reach them from deployment.json.
+name: deploy
+on:
+  push:
+    branches: [main]
+  pull_request:
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  deploy:
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    uses: companygraph/mcp-server/.github/workflows/deployment.yml@v0.17.0
+    secrets: inherit
