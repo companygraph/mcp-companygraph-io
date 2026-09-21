@@ -4,8 +4,8 @@
 terraform {
   required_version = ">= 1.9"
   required_providers {
-    google      = { source = "hashicorp/google", version = ">= 6.0, < 8.0" }
-    google-beta = { source = "hashicorp/google-beta", version = ">= 6.0, < 8.0" }
+    google      = { source = "hashicorp/google", version = "~> 8.0" }
+    google-beta = { source = "hashicorp/google-beta", version = "~> 8.0" }
   }
   backend "gcs" {
     bucket = "companygraph-io-mcp-tfstate"
@@ -26,7 +26,7 @@ provider "google-beta" {
 }
 
 module "mcp" {
-  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/terraform?ref=v0.18.1"
+  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/terraform?ref=v0.19.0"
   project         = local.d.project
   project_number  = local.d.project_number
   billing_account = local.d.billing_account

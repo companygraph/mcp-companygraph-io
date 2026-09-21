@@ -5,7 +5,7 @@
 terraform {
   required_version = ">= 1.9"
   required_providers {
-    google = { source = "hashicorp/google", version = ">= 6.0, < 8.0" }
+    google = { source = "hashicorp/google", version = "~> 8.0" }
   }
 }
 
@@ -23,7 +23,7 @@ provider "google" {
 }
 
 module "bootstrap" {
-  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/bootstrap?ref=v0.18.1"
+  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/bootstrap?ref=v0.19.0"
   project         = local.d.project
   region          = local.d.region
   billing_account = local.d.billing_account
