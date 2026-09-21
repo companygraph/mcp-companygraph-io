@@ -4,9 +4,14 @@ What GitHub Actions needs before it can authenticate: the state bucket `companyg
 
 The owner applies it once, locally, under their own login, and again only when the repository in `deployment.json` changes. Its state is local and stays on the owner's machine, never in the bucket it creates, so a second copy of `terraform.tfstate` kept somewhere safe is the only backup it has. The state file is ignored by git and never committed.
 
+A re-apply restores that state first: copy `~/companygraph-io-mcp-bootstrap.tfstate` to `infra/bootstrap/terraform.tfstate` before running anything. The plan that follows must show no resource to add — a plan that adds the pool, the bucket, the service accounts or the registry means the state is missing rather than the infrastructure, so stop and find the copy before applying anything. Once the apply finishes, copy the state back out to the same file, and to the second safe copy.
+
     gcloud auth application-default login
+    cp ~/companygraph-io-mcp-bootstrap.tfstate infra/bootstrap/terraform.tfstate
     terraform -chdir=infra/bootstrap init
+    terraform -chdir=infra/bootstrap plan
     terraform -chdir=infra/bootstrap apply
+    cp infra/bootstrap/terraform.tfstate ~/companygraph-io-mcp-bootstrap.tfstate
 
 The budget in `../` is a resource of the billing account, not of the project, and only a billing administrator can grant the role that creates it. The owner is one, so the module grants `terraform@companygraph-io-mcp.iam.gserviceaccount.com` the Billing Account Costs Manager role on the billing account; CI's own account never could.
 
