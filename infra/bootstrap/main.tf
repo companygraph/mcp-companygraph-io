@@ -1,5 +1,5 @@
 # What has to exist before GitHub Actions can authenticate and push: applied once by the owner
-# under their own login, with local state, and changed only when the repository changes.
+# under their own login, with local state, and changed only when the module or the repository changes.
 # Everything below the project that CI can create lives in ../ and is applied by CI. The
 # resources are the shared module's, and this deployment's own values come from deployment.json.
 terraform {
@@ -23,15 +23,19 @@ provider "google" {
 }
 
 module "bootstrap" {
-  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/bootstrap?ref=v0.17.0"
+  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/bootstrap?ref=v0.18.0"
   project         = local.d.project
   region          = local.d.region
+  project_number  = local.d.project_number
+  organization    = local.d.organization
   billing_account = local.d.billing_account
   repository      = local.d.repository
+  repository_id   = local.d.repository_id
 }
 
 output "workload_identity_provider" { value = module.bootstrap.workload_identity_provider }
 output "terraform_service_account" { value = module.bootstrap.terraform_service_account }
+output "plan_service_account" { value = module.bootstrap.plan_service_account }
 output "deploy_service_account" { value = module.bootstrap.deploy_service_account }
 output "registry" { value = module.bootstrap.registry }
 output "state_bucket" { value = module.bootstrap.state_bucket }
