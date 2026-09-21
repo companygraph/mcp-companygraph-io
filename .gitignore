@@ -11,5 +11,5 @@ jsonld.json
 server.json
 dist/
 .terraform/
-*.tfstate
-*.tfstate.backup
+*.tfstate*
+*.pem

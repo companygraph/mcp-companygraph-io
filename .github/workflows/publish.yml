@@ -1,0 +1,12 @@
+# The registry entry is the server's own workflow, called by the release package.json pins; it
+# runs in the `registry` environment, whose review gate and signing key stay this repository's.
+name: publish
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: read
+jobs:
+  publish:
+    uses: companygraph/mcp-server/.github/workflows/registry.yml@v0.17.0
+    secrets: inherit

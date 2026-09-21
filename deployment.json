@@ -1,0 +1,13 @@
+{
+  "project": "companygraph-io-mcp",
+  "project_number": "1029700541402",
+  "billing_account": "011DEB-4A45A0-3A52BB",
+  "region": "europe-west6",
+  "domain": "mcp.companygraph.io",
+  "site_id": "mcp-companygraph-io",
+  "repository": "companygraph/mcp-companygraph-io",
+  "registry_name": "io.companygraph/mental-model",
+  "registry_domain": "companygraph.io",
+  "budget_chf": 10,
+  "run_host": ""
+}

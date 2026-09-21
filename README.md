@@ -1,0 +1,78 @@
+# mcp.companygraph.io
+
+CompanyGraph's own model, `companygraph/mental-model`, served over MCP at `https://mcp.companygraph.io/mcp`. That model is the company behind the meta-model, described in the vocabulary it publishes, with no person anywhere in it. This repository pins one commit of the model and one release of `companygraph/mcp-server`, builds an image that carries the model's snapshot, and runs it on Cloud Run in Zurich behind Firebase Hosting. Everything below the Google Cloud project is Terraform, applied by GitHub Actions.
+
+It is the second deployment of the server, after `robertblust/mcp-blust-ch`, and it is built entirely from the parts the server ships under `deploy/`: the Terraform modules, the build command, the shared tests and the workflows. What is this deployment's own is its values in `deployment.json`, its brand, its page styles and its instance tests.
+
+## Using it
+
+Once it is live, add `https://mcp.companygraph.io/mcp` as a custom connector in Claude, or as a remote MCP server in ChatGPT's developer mode or the Gemini CLI. No authentication. The page at `https://mcp.companygraph.io` lists the tools with what each returns, from the server's own list: the types and their schemas, what the types declare about each other, the rules, and the entities with their references. Every answer names the model commit it was read from.
+
+## What pins what
+
+`source.json` names the model commit and `package.json` the server release. Moving either is a pull request; the merge builds the image, applies the infrastructure with it and checks that the service reports the new commit.
+
+## Building it
+
+    npm ci
+    npm run snapshot      # writes dist/snapshot.json from the pinned commit
+    npm run page-css      # writes dist/page.css from the design package's blocks and own.css
+    npm run jsonld        # writes dist/jsonld.json from the snapshot, once the model names a surface here
+    npm test              # the server's shared deployment tests and this instance's own
+    docker build -t mcp-companygraph-io:local .
+
+The model names no surface for this deployment yet, so `npm run jsonld` says so and writes nothing, and the page carries no structured data until it does.
+
+## Infrastructure
+
+`infra/bootstrap/` is applied once by the owner and holds what CI needs before it can authenticate: the state bucket, the identity pool, the two service accounts and the image registry. `infra/` is applied by CI on every merge: its state bucket and one call into the module `companygraph/mcp-server` ships under `deploy/terraform`, with this deployment's own values read from `deployment.json`. The two workflows in `.github/workflows/` only call the package's own `deployment.yml` and `registry.yml`, by the release `package.json` pins.
+
+Publishing to the MCP Registry runs in the `registry` environment, which requires the owner's review of every run. The signing key lives there as an environment secret, `MCP_PRIVATE_KEY`, never as a repository secret, because a repository secret would be readable by any workflow on any branch and the review gate would protect nothing.
+
+## The owner's steps
+
+Until these are done, the pull request's `deploy / terraform` fails at authentication, because the project, the identity pool and the service accounts it signs in with do not exist yet. They are the owner's, in this order. The key commands need OpenSSL 3 and `/usr/bin/openssl` on macOS is LibreSSL, so every step runs in a shell that has first run:
+
+    export PATH=/opt/homebrew/bin:$PATH
+
+1. Create the project and link it to the billing account, then write the project number into `deployment.json` as `project_number`, in a commit on the pull request:
+
+        gcloud projects create companygraph-io-mcp --organization=14986580178
+        gcloud billing projects link companygraph-io-mcp --billing-account=011DEB-4A45A0-3A52BB
+        gcloud projects describe companygraph-io-mcp --format='value(projectNumber)'
+
+2. Enable the Cloud Billing API on the new project:
+
+        gcloud services enable cloudbilling.googleapis.com --project companygraph-io-mcp
+
+3. Apply the bootstrap before the merge, because the merge's deploy signs in with what it creates. Until then `infra/bootstrap/` exists only on the pull request's branch, so it is applied from the worktree that has the branch checked out. Its state is a local file git ignores, and `git worktree remove` deletes ignored files without a word, so copy the state out of the worktree the moment the apply finishes; no worktree holding it may be removed before that copy exists. Keep a second copy of the copied file somewhere safe as well, because it is the bootstrap's only state:
+
+        brew tap hashicorp/tap && brew install hashicorp/tap/terraform
+        gcloud auth application-default login
+        terraform -chdir=infra/bootstrap init && terraform -chdir=infra/bootstrap apply
+        cp infra/bootstrap/terraform.tfstate ~/companygraph-io-mcp-bootstrap.tfstate
+
+4. Merge the pull request. The first deploy fails at the live check, and its `run_host` warning names the host; write it into `deployment.json` as `run_host` and merge that.
+
+5. Make the Registry's signing key outside the repository, so it can never be committed, and store the private key as `MCP_PRIVATE_KEY` in the repository's `registry` environment, which the fourth and fifth commands create with the owner as its required reviewer and tags `v*` as the only refs that may deploy to it. The third command prints the TXT record step 6 publishes; keep that line. Move `"$K/key.pem"` into a password manager before the last command if the key is to be kept, because the last command deletes it:
+
+        K=$(mktemp -d)
+        openssl genpkey -algorithm Ed25519 -out "$K/key.pem"
+        echo "companygraph.io. IN TXT \"v=MCPv1; k=ed25519; p=$(openssl pkey -in "$K/key.pem" -pubout -outform DER | tail -c 32 | base64)\""
+        echo '{"reviewers":[{"type":"User","id":7037057}],"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}' | gh api -X PUT repos/companygraph/mcp-companygraph-io/environments/registry --input -
+        gh api -X POST repos/companygraph/mcp-companygraph-io/environments/registry/deployment-branch-policies -f name='v*' -f type=tag
+        openssl pkey -in "$K/key.pem" -noout -text | grep -A3 'priv:' | tail -n +2 | tr -d ' :\n' | gh secret set MCP_PRIVATE_KEY --env registry --repo companygraph/mcp-companygraph-io
+        rm -rf "$K"
+
+6. At Hostpoint, add the records the deployment names for `mcp.companygraph.io`, replacing the default record, and the TXT record step 5 printed, at the apex of `companygraph.io`:
+
+        terraform -chdir=infra init
+        terraform -chdir=infra output dns_records
+
+7. Once the server is live and the model names its surface, tag `v1.0.0` on `main` as GitHub has it and approve the `registry` run:
+
+        git fetch origin && git tag v1.0.0 origin/main && git push origin v1.0.0
+
+## License
+
+CC BY 4.0 for the text here; the model's own license is its own.

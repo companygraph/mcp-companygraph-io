@@ -1,0 +1,25 @@
+{
+  "name": "mcp-companygraph-io",
+  "version": "0.1.0",
+  "private": true,
+  "description": "mcp.companygraph.io: CompanyGraph's own model served over MCP",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "snapshot": "companygraph-mcp-deploy snapshot",
+    "page-css": "companygraph-mcp-deploy page-css",
+    "jsonld": "companygraph-mcp-deploy jsonld",
+    "server-json": "companygraph-mcp-deploy server-json",
+    "test": "node --test 'test/*.test.mjs'"
+  },
+  "dependencies": {
+    "companygraph-mcp-server": "github:companygraph/mcp-server#v0.17.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "^2.0.0",
+    "@robertblust/design": "github:robertblust/design#v0.63.0",
+    "playwright": "^1.63.0"
+  }
+}
