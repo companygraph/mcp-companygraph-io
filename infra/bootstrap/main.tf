@@ -23,7 +23,7 @@ provider "google" {
 }
 
 module "bootstrap" {
-  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/bootstrap?ref=v0.21.0"
+  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/bootstrap?ref=v0.22.0"
   project         = local.d.project
   region          = local.d.region
   billing_account = local.d.billing_account
