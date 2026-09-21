@@ -6,7 +6,7 @@ It is the second deployment of the server, after `robertblust/mcp-blust-ch`, and
 
 ## Using it
 
-Once it is live, add `https://mcp.companygraph.io/mcp` as a custom connector in Claude, or as a remote MCP server in ChatGPT's developer mode or the Gemini CLI. No authentication. The page at `https://mcp.companygraph.io` lists the tools with what each returns, from the server's own list: the types and their schemas, what the types declare about each other, the rules, and the entities with their references. Every answer names the model commit it was read from.
+Add `https://mcp.companygraph.io/mcp` as a custom connector in Claude, or as a remote MCP server in ChatGPT's developer mode or the Gemini CLI. No authentication. The page at `https://mcp.companygraph.io` lists the tools with what each returns, from the server's own list: the types and their schemas, what the types declare about each other, the rules, and the entities with their references. Every answer names the model commit it was read from.
 
 ## What pins what
 
@@ -17,11 +17,9 @@ Once it is live, add `https://mcp.companygraph.io/mcp` as a custom connector in 
     npm ci
     npm run snapshot      # writes dist/snapshot.json from the pinned commit
     npm run page-css      # writes dist/page.css from the design package's blocks and own.css
-    npm run jsonld        # writes dist/jsonld.json from the snapshot, once the model names a surface here
+    npm run jsonld        # writes dist/jsonld.json from the snapshot
     npm test              # the server's shared deployment tests and this instance's own
     docker build -t mcp-companygraph-io:local .
-
-The model names no surface for this deployment yet, so `npm run jsonld` says so and writes nothing, and the page carries no structured data until it does.
 
 ## Infrastructure
 
@@ -31,7 +29,7 @@ Publishing to the MCP Registry runs in the `registry` environment, which require
 
 ## The owner's steps
 
-Until these are done, the pull request's `deploy / terraform` fails at authentication, because the project, the identity pool and the service accounts it signs in with do not exist yet. They are the owner's, in this order. The key commands need OpenSSL 3 and `/usr/bin/openssl` on macOS is LibreSSL, so every step runs in a shell that has first run:
+The record of how the deployment was stood up: the owner's steps, done once, in this order, kept here so the commands stay correct as a record rather than as work still to do. The key commands need OpenSSL 3 and `/usr/bin/openssl` on macOS is LibreSSL, so every step ran in a shell that had first run:
 
     export PATH=/opt/homebrew/bin:$PATH
 
@@ -45,7 +43,7 @@ Until these are done, the pull request's `deploy / terraform` fails at authentic
 
         gcloud services enable cloudbilling.googleapis.com --project companygraph-io-mcp
 
-3. Apply the bootstrap before the merge, because the merge's deploy signs in with what it creates. Until then `infra/bootstrap/` exists only on the pull request's branch, so it is applied from the worktree that has the branch checked out. Its state is a local file git ignores, and `git worktree remove` deletes ignored files without a word, so copy the state out of the worktree the moment the apply finishes; no worktree holding it may be removed before that copy exists. Keep a second copy of the copied file somewhere safe as well, because it is the bootstrap's only state:
+3. Apply the bootstrap before the merge, because the merge's deploy signs in with what it creates. Until then `infra/bootstrap/` exists only on the pull request's branch, so it was applied from the worktree that had the branch checked out. Its state is a local file git ignores, and `git worktree remove` deletes ignored files without a word, so the state was copied out of the worktree the moment the apply finished, kept outside the repository at `~/companygraph-io-mcp-bootstrap.tfstate`, with a second copy somewhere safe as well, because it is the bootstrap's only state. `infra/bootstrap/README.md` says how to restore it before a re-apply:
 
         brew tap hashicorp/tap && brew install hashicorp/tap/terraform
         gcloud auth application-default login
