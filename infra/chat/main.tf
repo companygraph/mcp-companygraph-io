@@ -29,7 +29,7 @@ provider "google-beta" {
 }
 
 module "chat" {
-  source         = "git::https://github.com/companygraph/chat-server.git//deploy/terraform?ref=v0.1.3"
+  source         = "git::https://github.com/companygraph/chat-server.git//deploy/terraform?ref=v0.2.0"
   project        = local.d.project
   project_number = local.d.project_number
   region         = local.d.region
@@ -39,6 +39,7 @@ module "chat" {
   origins        = local.c.origins
   month_tokens   = local.c.month_tokens
   run_host       = local.c.run_host
+  model_provider = lookup(local.c, "provider", "vertex")
   image          = var.image
 }
 

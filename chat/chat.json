@@ -6,5 +6,6 @@
     "https://companygraph.io"
   ],
   "month_tokens": 18500000,
-  "run_host": "chat-ksyefvmbdq-oa.a.run.app"
+  "run_host": "chat-ksyefvmbdq-oa.a.run.app",
+  "provider": "anthropic"
 }
