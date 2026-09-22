@@ -1,0 +1,19 @@
+# The chat's build, plan and apply are companygraph/chat-server's own, called by the release
+# chat/package.json pins; this deployment's values reach them from chat/chat.json and the
+# project's from deployment.json. Its own concurrency group, beside deploy's.
+name: chat
+on:
+  push:
+    branches: [main]
+  pull_request:
+concurrency:
+  group: chat-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  chat:
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    uses: companygraph/chat-server/.github/workflows/deployment.yml@v0.1.0
+    secrets: inherit

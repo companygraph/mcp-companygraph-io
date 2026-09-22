@@ -71,6 +71,16 @@ The record of how the deployment was stood up: the owner's steps, done once, in 
 
         git fetch origin && git tag v1.0.0 origin/main && git push origin v1.0.0
 
+## The chat
+
+`chat.companygraph.io` is the chat over this host: a visitor's question on companygraph.io goes to it, it asks `mcp.companygraph.io` through the tools, and Claude Sonnet 5 on Vertex AI in this project writes the answer from what the tools said. It is `companygraph/chat-server`, deployed from this repository beside the server: `chat/` holds what is this deployment's own for it, `chat/package.json` pinning the release, `chat/chat.json` naming the domain, the site, the host it reads, the page origins it answers and the month's ceiling in input-equivalent tokens, the Dockerfile, the brand, the stylesheet and the tests; `infra/chat/` is its Terraform root, applied by CI with its own state prefix in the same bucket; `.github/workflows/chat.yml` calls the chat server's own workflow. The release is named in those three places and the chat server's pin test holds them to one. The budget in `deployment.json` covers both services.
+
+Nothing the chat spends escapes its ceiling. The service refuses before it asks the model, an address gets twenty requests an hour, and a meter in this project's Firestore database counts every model call against a day's share and a month's ceiling, CHF 30 a month at the model's price. The chat is stopped by hand where the meter keeps it: the `(default)` database, document `chat/meter`, field `closed` set to `true`, which refuses the next message and spends nothing, and back to `false` to open it; the day and the month there are UTC.
+
+Four steps are the owner's, because Terraform cannot do them. Claude's terms are accepted and Sonnet 5 enabled in Vertex AI's Model Garden, once for this project, and until it is done the first message fails as `internal`. The model's quota is lowered on the project's Quotas page to about sixty requests and 300,000 input tokens a minute. The first deploy fails at its live check by design, since `chat/chat.json` names no `run_host` yet; the apply's warning names the address the service was given, and a second pull request writes it in. The domain's records are set at Hostpoint from `terraform -chdir=infra/chat output dns_records`, run after `terraform -chdir=infra/chat init`. Then one message is sent by hand, because the deploy's `GET /chat` proves the route and the host and never the model:
+
+    curl -N -H 'X-Chat: 1' -H 'content-type: application/json' https://chat.companygraph.io/chat -d '{"messages":[{"role":"user","content":"What does the model say about the owner?"}],"lang":"en"}'
+
 ## License
 
 CC BY 4.0 for the text here; the model's own license is its own.
