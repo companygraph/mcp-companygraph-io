@@ -1,0 +1,21 @@
+{
+  "name": "chat-companygraph-io",
+  "version": "0.1.0",
+  "private": true,
+  "description": "chat.companygraph.io: the chat over mcp.companygraph.io",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "page-css": "companygraph-chat-deploy page-css",
+    "test": "node --test 'test/*.test.mjs'"
+  },
+  "dependencies": {
+    "companygraph-chat-server": "github:companygraph/chat-server#v0.1.1"
+  },
+  "devDependencies": {
+    "@robertblust/design": "github:robertblust/design#v0.72.1",
+    "playwright": "^1.63.0"
+  }
+}

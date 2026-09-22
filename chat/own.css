@@ -1,0 +1,70 @@
+  /* The page's own layout. Everything above is the design package's, and moves with it. */
+  /* No top padding on the body: blust.ch has none, and the space above the mark is the
+     header's own 2rem. Adding any here pushes the whole page down by exactly that much, which
+     is what put the mark 22 pixels below its sibling. */
+  body { background: var(--ground); color: var(--ink); padding: 0 0 6rem; }
+  /* No rule for the container here: the page names it `main.shell`, and the prose reset above
+     ships `.shell` with the family's measure and gutter. Restating those numbers is how they
+     drift — a copy beside a package declaring the same 1180 moves when neither does. */
+
+  p { margin: 0 0 1rem; max-width: 62ch; }
+  .note { margin: 2rem 0; max-width: 56ch; padding-left: 1rem;
+          border-left: 2px solid var(--c-flag); color: var(--ink); font-size: 1rem; }
+  /* The commit is forty characters with nothing to break on, and it is the one place in this
+     family where prose carries a token that long: every other page prints the short form. On a
+     narrow screen it took the page 35 pixels past the viewport, which is a sideways scroll a
+     reader feels and no check here saw until one measured it. */
+  .note p { margin: 0 0 .8rem; max-width: none; overflow-wrap: anywhere; }
+  .note p:last-child { margin-bottom: 0; }
+  .title { margin-bottom: .4rem; }
+
+  /* The facts the page states about itself, two columns: the term in the dim ink, the value
+     in the page's own, wrapping to one column where the value is an address too long to sit
+     beside its term. */
+  .facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .35rem 1.25rem;
+           margin: 1.5rem 0; max-width: 62ch; }
+  .facts dt { color: var(--dim); }
+  .facts dd { margin: 0; overflow-wrap: anywhere; }
+  @media (max-width: 34rem) {
+    .facts { grid-template-columns: minmax(0, 1fr); gap: .1rem; }
+    .facts dt { margin-top: .6rem; }
+  }
+
+  /* The header the family's pages open with, and only its left half: the mark, linked home.
+     No nav, because there is one page here and nowhere to navigate to, and no language or
+     theme control, because nothing on this page is translated and the tokens carry both
+     themes already. The design package's header block is not vendored for the same reason: it
+     is the block for the nav this page does not have. These rules were read out of blust.ch's
+     landing page, and companygraph.io's opens with the same header padding and the same rules
+     for its mark, so the three open the same way. */
+  header { padding: 2rem 0; }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+         flex-wrap: wrap; }
+  /* The lockup takes the page's own ink, not the link color: on blust.ch the reset leaves a
+     link inheriting and only the span of the wordmark is the accent. Without this the generic
+     rule above paints the whole brand blue and the two halves stop being two halves. */
+  .brand { white-space: nowrap; flex: 0 0 auto; display: flex; align-items: center; gap: .7rem;
+           text-decoration: none; margin-right: auto; color: var(--ink); }
+  /* companygraph.io's mark carries its own stroke and fill in currentColor, so the one rule
+     it needs is the color it draws in; blust.ch's plate and letters had two more. */
+  .brand svg { width: 28px; height: 28px; color: var(--c-mid); flex: 0 0 auto; }
+  .brand b { font-weight: 600; font-size: 1.06rem; letter-spacing: -.01em; }
+  .brand b span { color: var(--c-mid); }
+  .brand:focus-visible { outline: 2px solid var(--c-mid); outline-offset: 4px; border-radius: 4px; }
+  a { color: var(--c-mid); }
+  a:hover, a:focus-visible { color: var(--ink); }
+  code, pre, .mono { font-family: "Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+  code, pre { font-size: .88em; }
+  pre, code.addr { background: var(--raise); border: 1px solid var(--rule); border-radius: 6px; }
+  pre { padding: .85rem 1rem; overflow-x: auto; }
+  code.addr { padding: .25rem .5rem; color: var(--c-mid); }
+
+  footer { margin-top: 2.6rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+           font-family: "Plex Mono", ui-monospace, monospace; font-size: .78rem;
+           letter-spacing: .06em; color: var(--dim); }
+  footer a { color: inherit; }
+  footer a:hover, footer a:focus-visible { color: var(--c-mid); }
+
+  @media (max-width: 34rem) {
+    body { padding: 0 0 4rem; }
+  }

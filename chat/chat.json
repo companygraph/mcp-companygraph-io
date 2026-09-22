@@ -1,0 +1,8 @@
+{
+  "domain": "chat.companygraph.io",
+  "site_id": "chat-companygraph-io",
+  "mcp_url": "https://mcp.companygraph.io/mcp",
+  "origins": ["https://companygraph.io"],
+  "month_tokens": 18500000,
+  "run_host": ""
+}
