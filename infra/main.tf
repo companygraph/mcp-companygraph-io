@@ -26,7 +26,7 @@ provider "google-beta" {
 }
 
 module "mcp" {
-  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/terraform?ref=v0.26.0"
+  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/terraform?ref=v0.27.0"
   project         = local.d.project
   project_number  = local.d.project_number
   billing_account = local.d.billing_account
