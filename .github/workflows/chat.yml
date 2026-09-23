@@ -15,5 +15,5 @@ jobs:
       contents: read
       id-token: write
       pull-requests: write
-    uses: companygraph/chat-server/.github/workflows/deployment.yml@v0.7.0
+    uses: companygraph/chat-server/.github/workflows/deployment.yml@v0.8.0
     secrets: inherit
