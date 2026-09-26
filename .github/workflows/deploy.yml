@@ -14,5 +14,5 @@ jobs:
       contents: read
       id-token: write
       pull-requests: write
-    uses: companygraph/mcp-server/.github/workflows/deployment.yml@v0.30.2
+    uses: companygraph/mcp-server/.github/workflows/deployment.yml@v0.30.3
     secrets: inherit
