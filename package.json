@@ -15,7 +15,7 @@
     "test": "node --test 'test/*.test.mjs'"
   },
   "dependencies": {
-    "companygraph-mcp-server": "github:companygraph/mcp-server#v0.30.3"
+    "companygraph-mcp-server": "github:companygraph/mcp-server#v0.30.4"
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "^2.0.0",
