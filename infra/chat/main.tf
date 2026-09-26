@@ -29,18 +29,19 @@ provider "google-beta" {
 }
 
 module "chat" {
-  source         = "git::https://github.com/companygraph/chat-server.git//deploy/terraform?ref=v0.12.7"
-  project        = local.d.project
-  project_number = local.d.project_number
-  region         = local.d.region
-  domain         = local.c.domain
-  site_id        = local.c.site_id
-  mcp_url        = local.c.mcp_url
-  origins        = local.c.origins
-  month_tokens   = local.c.month_tokens
-  run_host       = local.c.run_host
-  model_provider = lookup(local.c, "provider", "vertex")
-  image          = var.image
+  source               = "git::https://github.com/companygraph/chat-server.git//deploy/terraform?ref=v0.13.0"
+  project              = local.d.project
+  project_number       = local.d.project_number
+  region               = local.d.region
+  domain               = local.c.domain
+  site_id              = local.c.site_id
+  mcp_url              = local.c.mcp_url
+  origins              = local.c.origins
+  month_tokens         = local.c.month_tokens
+  run_host             = local.c.run_host
+  model_provider       = lookup(local.c, "provider", "vertex")
+  anthropic_federation = try(local.c.anthropic_federation, null)
+  image                = var.image
 }
 
 output "service_url" { value = module.chat.service_url }
