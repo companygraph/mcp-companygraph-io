@@ -8,5 +8,5 @@ permissions:
   contents: read
 jobs:
   publish:
-    uses: companygraph/mcp-server/.github/workflows/registry.yml@v0.37.0
+    uses: companygraph/mcp-server/.github/workflows/registry.yml@v0.37.1
     secrets: inherit
