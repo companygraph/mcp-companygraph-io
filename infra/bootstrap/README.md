@@ -1,6 +1,6 @@
 # Bootstrap
 
-What GitHub Actions needs before it can authenticate: the state bucket `companygraph-io-mcp-tfstate`, the identity pool and its GitHub provider, the `terraform`, `terraform-plan` and `deploy` service accounts, the image registry and the organization policy override that lets `../` make the server public. The resources are the module `companygraph/mcp-server` ships under `deploy/bootstrap`, at the release `main.tf` names, and every value it takes is read from `../../deployment.json`.
+What GitHub Actions needs before it can authenticate: the state bucket `companygraph-io-mcp-tfstate`, the identity pool and its GitHub provider, the `terraform`, `terraform-plan` and `deploy` service accounts, the image registry and the organization policy override that lets `../` make the server public. The resources are the module `companygraph/mcp-server` ships under `deploy/google/bootstrap`, at the release `main.tf` names, and every value it takes is read from `../../deployment.json`.
 
 The owner applies it, locally, under their own login, when the module's release or the repository in `deployment.json` changes. Its state is local and stays on the owner's machine, never in the bucket it creates, so a second copy of `terraform.tfstate` kept somewhere safe is the only backup it has. The state file is ignored by git and never committed.
 
