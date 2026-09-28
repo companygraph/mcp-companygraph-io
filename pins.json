@@ -1,9 +1,9 @@
 {
   "pins": [
     { "kind": "conventions", "file": "conventions.json", "repo": "robertblust/conventions" },
-    { "kind": "npm-tag", "file": "package.json", "repo": "companygraph/mcp-server" },
+    { "kind": "npm-tag", "file": "package.json", "repo": "companygraph/mcp-server", "move": "grep -rlE 'companygraph/mcp-server[^[:space:]\"]*(#|@|\\?ref=)v[0-9]+\\.[0-9]+\\.[0-9]+' package.json .github/workflows infra | xargs perl -pi -e 's~(companygraph/mcp-server[^\\s\"]*?(?:#|@|\\?ref=))v\\d+\\.\\d+\\.\\d+~${1}{version}~g' && npm install" },
     { "kind": "npm-tag", "file": "package.json", "repo": "robertblust/design" },
-    { "kind": "npm-tag", "file": "chat/package.json", "repo": "companygraph/chat-server", "after": ["npm install --prefix chat"] },
+    { "kind": "npm-tag", "file": "chat/package.json", "repo": "companygraph/chat-server", "move": "grep -rlE 'companygraph/chat-server[^[:space:]\"]*(#|@|\\?ref=)v[0-9]+\\.[0-9]+\\.[0-9]+' chat/package.json .github/workflows infra | xargs perl -pi -e 's~(companygraph/chat-server[^\\s\"]*?(?:#|@|\\?ref=))v\\d+\\.\\d+\\.\\d+~${1}{version}~g' && npm install --prefix chat" },
     { "kind": "npm-tag", "file": "chat/package.json", "repo": "robertblust/design", "after": ["npm install --prefix chat"] },
     { "kind": "source-commit", "file": "source.json", "repo": "companygraph/mental-model" }
   ],
