@@ -1,0 +1,23 @@
+{
+  "pins": [
+    { "kind": "conventions", "file": "conventions.json", "repo": "robertblust/conventions" },
+    { "kind": "npm-tag", "file": "package.json", "repo": "companygraph/mcp-server" },
+    { "kind": "npm-tag", "file": "package.json", "repo": "robertblust/design" },
+    { "kind": "npm-tag", "file": "chat/package.json", "repo": "companygraph/chat-server", "after": ["npm install --prefix chat"] },
+    { "kind": "npm-tag", "file": "chat/package.json", "repo": "robertblust/design", "after": ["npm install --prefix chat"] },
+    { "kind": "source-commit", "file": "source.json", "repo": "companygraph/mental-model" }
+  ],
+  "verify": [
+    "npm ci",
+    "GITHUB_TOKEN=${GITHUB_TOKEN:-$(gh auth token)} npm run snapshot",
+    "npm run page-css",
+    "npm run jsonld",
+    "npx playwright install --with-deps chromium",
+    "npm test",
+    "docker build -t mcp-companygraph-io:local .",
+    "npm ci --prefix chat",
+    "npm run page-css --prefix chat",
+    "npm test --prefix chat",
+    "docker build -t mcp-companygraph-io-chat:local chat"
+  ]
+}
