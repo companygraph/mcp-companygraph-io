@@ -9,7 +9,7 @@
   ],
   "verify": [
     "npm ci",
-    "npm run snapshot",
+    "GITHUB_TOKEN=${GITHUB_TOKEN:-$(gh auth token)} npm run snapshot",
     "npm run page-css",
     "npm run jsonld",
     "npx playwright install --with-deps chromium",
