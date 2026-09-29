@@ -1,9 +1,9 @@
   /* The page's own layout. Everything above is the design package's, and moves with it. */
-  /* No top padding on the body: blust.ch has none, and the space above the mark is the
-     header's own 2rem. Adding any here pushes the whole page down by exactly that much, which
-     is what put the mark 22 pixels below its sibling. */
+  /* No top padding on the body: blust.ch has none, and the header's band starts at the top of
+     the window. Adding any here pushes the whole page down by exactly that much, which is what
+     put the mark 22 pixels below its sibling. */
   body { background: var(--ground); color: var(--ink); padding: 0 0 6rem; }
-  /* No rule for the container here: the page names it `main.shell`, and the prose reset above
+  /* No rule for the container here: the page names it `.shell`, and the prose reset above
      ships `.shell` with the family's measure and gutter. Restating those numbers is how they
      drift — a copy beside a package declaring the same 1180 moves when neither does. */
 
@@ -31,11 +31,11 @@
   /* The header the family's pages open with, and only its left half: the mark, linked home.
      No nav, because there is one page here and nowhere to navigate to, and no language or
      theme control, because nothing on this page is translated and the tokens carry both
-     themes already. The design package's header block is not vendored for the same reason: it
-     is the block for the nav this page does not have. These rules were read out of blust.ch's
-     landing page, and companygraph.io's opens with the same header padding and the same rules
-     for its mark, so the three open the same way. */
-  header { padding: 2rem 0; }
+     themes already. The row itself — its height, its band, staying on screen as the page
+     scrolls — is the design package's header block, which the build puts ahead of this file;
+     what follows is only the mark and the bar's gap, the two things that block leaves to each
+     site. These rules were read out of blust.ch's landing page, and companygraph.io's opens with the
+     same rules for its mark, so the three open the same way. */
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 2rem;
          flex-wrap: wrap; }
   /* The lockup takes the page's own ink, not the link color: on blust.ch the reset leaves a
