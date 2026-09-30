@@ -15,7 +15,12 @@ test("the root is CompanyGraph", () => {
 });
 
 test("the product the company makes resolves by its type and name", () => {
-  assert.equal(getEntity(s, "product", "CompanyGraph Core").entity.id, "products/companygraph-core");
+  // get_entity answers with the id alone; the literal path this pins is an address, so it is
+  // checked against the address the snapshot carries for that id, not against the id itself,
+  // and it still holds once a backfill gives the product an id its address does not spell.
+  const resolved = getEntity(s, "product", "CompanyGraph Core").entity;
+  const entity = s.entities.find((e) => e.id === resolved.id);
+  assert.equal(entity.address ?? entity.id, "products/companygraph-core");
 });
 
 test("the registry entry is generated from the model and fits the registry", () => {
