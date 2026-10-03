@@ -1,0 +1,19 @@
+# The week's KPI values of this organization, written on Monday morning by companygraph/mcp-server's
+# own workflow at the release package.json pins, acting as this project's kpi-reporter. The
+# workflow sits in another organization, where `secrets: inherit` does not reach, so the job names
+# the App id and key it passes. The log carries counts and full names, never a token.
+name: kpi
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+jobs:
+  kpi:
+    permissions:
+      contents: read
+      id-token: write
+    uses: companygraph/mcp-server/.github/workflows/kpi-google.yml@v0.52.0
+    with:
+      app-id: ${{ vars.KPI_APP_ID }}
+    secrets:
+      KPI_APP_PRIVATE_KEY: ${{ secrets.KPI_APP_PRIVATE_KEY }}
