@@ -13,4 +13,4 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: companygraph/chat-server/.github/workflows/report-google.yml@v0.23.2
+    uses: companygraph/chat-server/.github/workflows/report-google.yml@v0.24.0
