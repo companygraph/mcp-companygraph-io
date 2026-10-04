@@ -29,7 +29,7 @@ provider "google-beta" {
 }
 
 module "chat" {
-  source               = "git::https://github.com/companygraph/chat-server.git//deploy/google/terraform?ref=v0.26.0"
+  source               = "git::https://github.com/companygraph/chat-server.git//deploy/google/terraform?ref=v0.27.0"
   project              = local.d.project
   project_number       = local.d.project_number
   region               = local.d.region
@@ -43,6 +43,7 @@ module "chat" {
   anthropic_federation = try(local.c.anthropic_federation, null)
   verdict              = lookup(local.c, "verdict", false)
   verdict_threshold    = lookup(local.c, "verdict_threshold", null)
+  inference_geo        = lookup(local.c, "inference_geo", null)
   image                = var.image
 }
 
