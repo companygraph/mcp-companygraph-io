@@ -15,5 +15,6 @@
     "service_account_id": "svac_017XvZZdGsnGV2yQmJABgxyY",
     "workspace_id": "wrkspc_01A9iwwm2pEGTgsNAWHsu4ni"
   },
-  "verdict": true
+  "verdict": true,
+  "verdict_threshold": 0.8
 }
