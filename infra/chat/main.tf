@@ -29,7 +29,7 @@ provider "google-beta" {
 }
 
 module "chat" {
-  source               = "git::https://github.com/companygraph/chat-server.git//deploy/google/terraform?ref=v0.25.1"
+  source               = "git::https://github.com/companygraph/chat-server.git//deploy/google/terraform?ref=v0.26.0"
   project              = local.d.project
   project_number       = local.d.project_number
   region               = local.d.region
