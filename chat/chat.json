@@ -8,7 +8,7 @@
   "month_tokens": 18500000,
   "run_host": "chat-ksyefvmbdq-oa.a.run.app",
   "provider": "anthropic",
-  "inference_geo": "us",
+  "inference_geo": "global",
   "anthropic_federation": {
     "rule_id": "fdrl_01AUVYudpdozh2L2CUynnETk",
     "organization_id": "f48c0dfd-3bf9-4c7b-837c-254f7ba27923",
