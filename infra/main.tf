@@ -26,7 +26,7 @@ provider "google-beta" {
 }
 
 module "mcp" {
-  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/google/terraform?ref=v0.55.2"
+  source          = "git::https://github.com/companygraph/mcp-server.git//deploy/google/terraform?ref=v0.56.0"
   project         = local.d.project
   project_number  = local.d.project_number
   billing_account = local.d.billing_account
@@ -46,7 +46,7 @@ output "dns_records" { value = module.mcp.dns_records }
 # The organization's KPI values sit beside the service rather than inside it, since a KPI is the
 # organization's and not the server's; the weekly kpi workflow writes them as kpi-reporter.
 module "kpi" {
-  source         = "git::https://github.com/companygraph/mcp-server.git//deploy/google/kpi?ref=v0.55.2"
+  source         = "git::https://github.com/companygraph/mcp-server.git//deploy/google/kpi?ref=v0.56.0"
   project        = local.d.project
   project_number = local.d.project_number
   region         = local.d.region
