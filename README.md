@@ -1,6 +1,6 @@
 # mcp.companygraph.io
 
-CompanyGraph's own model, `companygraph/mental-model`, served over MCP at `https://mcp.companygraph.io/mcp`. That model is the company behind the meta-model, described in the vocabulary it publishes, with no person anywhere in it. This repository pins one commit of the model and one release of `companygraph/mcp-server`, builds an image that carries the model's snapshot, and runs it on Cloud Run in Zurich behind Firebase Hosting. Everything below the Google Cloud project is Terraform, applied by GitHub Actions.
+CompanyGraph's own model, `companygraph/mental-model`, served over MCP at `https://mcp.companygraph.io/mcp`. That model is the company behind the meta-model, described in the vocabulary it publishes; a person appears in it only as the holder of a seat. This repository pins one commit of the model and one release of `companygraph/mcp-server`, builds an image that carries the model's snapshot, and runs it on Cloud Run in Zurich behind Firebase Hosting. Everything below the Google Cloud project is Terraform, applied by GitHub Actions.
 
 It is the second deployment of the server, after `robertblust/mcp-blust-ch`, and it is built entirely from the parts the server ships under `deploy/`: the Terraform modules, the build command, the shared tests and the workflows. What is this deployment's own is its values in `deployment.json`, its brand, its page styles and its instance tests.
 
