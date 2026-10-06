@@ -15,6 +15,10 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    # Family pins move with the resync, never with Dependabot: conventions/PINS.md, Dependabot.
+    ignore:
+      - dependency-name: "companygraph-mcp-server"
+      - dependency-name: "@robertblust/design"
     schedule:
       interval: "weekly"
     # Zero, stated, because Dependabot applies three days when the key is absent and then offers
@@ -39,6 +43,8 @@ updates:
       interval: "weekly"
     ignore:
       - dependency-name: "*companygraph/mcp-server*"
+      - dependency-name: "*companygraph/chat-server*"
+      - dependency-name: "*robertblust/conventions*"
     groups:
       actions:
         patterns:
