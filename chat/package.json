@@ -12,10 +12,10 @@
     "test": "node --test 'test/*.test.mjs'"
   },
   "dependencies": {
-    "companygraph-chat-server": "github:companygraph/chat-server#v0.32.0"
+    "companygraph-chat-server": "github:companygraph/chat-server#v0.33.0"
   },
   "devDependencies": {
-    "@robertblust/design": "github:robertblust/design#v0.144.0",
+    "@robertblust/design": "github:robertblust/design#v0.145.0",
     "playwright": "^1.63.0"
   }
 }
