@@ -20,6 +20,6 @@
   "devDependencies": {
     "@modelcontextprotocol/client": "^2.3.1",
     "@robertblust/design": "github:robertblust/design#v0.154.0",
-    "playwright": "^1.63.0"
+    "playwright": "^1.64.1"
   }
 }
