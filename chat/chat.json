@@ -16,5 +16,12 @@
     "workspace_id": "wrkspc_01A9iwwm2pEGTgsNAWHsu4ni"
   },
   "verdict": true,
-  "verdict_threshold": 0.8
+  "verdict_threshold": 0.8,
+  "sign_in": {
+    "issuer": "https://id.blust.ch",
+    "project_id": "396565550420994416",
+    "org_id": "396565550404217200",
+    "client_id": "396565550655875440"
+  },
+  "user_month_tokens": 5000000
 }
