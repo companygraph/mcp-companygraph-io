@@ -4,8 +4,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { getEntity } from "companygraph-mcp-server/model";
-import { serverJson } from "companygraph-mcp-server/deploy";
+import { getEntity } from "@companygraph/mcp-server/model";
+import { serverJson } from "@companygraph/mcp-server/deploy";
 
 const s = JSON.parse(fs.readFileSync(path.join(process.cwd(), "dist/snapshot.json"), "utf8"));
 const entry = { name: "io.companygraph/mental-model", url: "https://mcp.companygraph.io/mcp" };
